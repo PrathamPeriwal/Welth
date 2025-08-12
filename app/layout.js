@@ -25,8 +25,7 @@ export default function RootLayout({ children }) {
           colorPrimary: "#3b82f6",
         },
       }}
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
+      fallbackRedirectUrl="/dashboard"
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
     >
