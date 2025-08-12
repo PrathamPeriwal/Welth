@@ -18,7 +18,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: undefined,
+        variables: {
+          colorPrimary: "#3b82f6",
+        },
+      }}
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >
       <html lang="en" className="dark">
         <head>
           <link rel="icon" href="/logo-sm.png" sizes="any" />

@@ -31,7 +31,14 @@ const aj = arcjet({
 // Create base Clerk middleware
 const clerk = clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
+  const url = req.nextUrl;
 
+  // If user is signed in and trying to access auth pages, redirect to dashboard
+  if (userId && (url.pathname === '/sign-in' || url.pathname === '/sign-up')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+  // If user is not signed in and trying to access protected routes, redirect to sign-in
   if (!userId && isProtectedRoute(req)) {
     const { redirectToSignIn } = await auth();
     return redirectToSignIn();
@@ -49,5 +56,8 @@ export const config = {
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     // Always run for API routes
     "/(api|trpc)(.*)",
+    // Include auth routes
+    "/sign-in(.*)",
+    "/sign-up(.*)",
   ],
 };
