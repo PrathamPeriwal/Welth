@@ -14,7 +14,16 @@ export function ReceiptScanner({ onScanComplete }) {
     loading: scanReceiptLoading,
     fn: scanReceiptFn,
     data: scannedData,
+    setData: setScannedData,
   } = useFetch(scanReceipt);
+
+  const fileToBase64 = async (file) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  };
 
   const handleReceiptScan = async (file) => {
     if (file.size > 5 * 1024 * 1024) {
@@ -22,15 +31,26 @@ export function ReceiptScanner({ onScanComplete }) {
       return;
     }
 
-    await scanReceiptFn(file);
+    try {
+      const base64 = await fileToBase64(file);
+      await scanReceiptFn({ base64, mimeType: file.type });
+    } catch (e) {
+      toast.error("Failed to read file");
+    }
   };
 
+  // Trigger once per successful scan; avoid infinite loops due to changing callback identity
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (scannedData && !scanReceiptLoading) {
-      onScanComplete(scannedData);
-      toast.success("Receipt scanned successfully");
+      try {
+        onScanComplete(scannedData);
+        toast.success("Receipt scanned successfully");
+      } finally {
+        setScannedData(undefined);
+      }
     }
-  }, [scanReceiptLoading, scannedData, onScanComplete]); // ✅ Added onScanComplete here
+  }, [scannedData, scanReceiptLoading]);
 
   return (
     <div className="flex items-center gap-4">

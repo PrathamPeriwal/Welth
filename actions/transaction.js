@@ -228,14 +228,31 @@ export async function getUserTransactions(query = {}) {
 }
 
 // Scan Receipt
-export async function scanReceipt(file) {
+export async function scanReceipt(fileOrPayload) {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("Missing GEMINI_API_KEY. Add it to your environment and restart the server.");
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Convert File to ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-    // Convert ArrayBuffer to Base64
-    const base64String = Buffer.from(arrayBuffer).toString("base64");
+    // Support both File objects and a base64 payload from the client
+    let base64String = "";
+    let mimeType = "image/jpeg";
+
+    if (fileOrPayload && typeof fileOrPayload === "object" && "base64" in fileOrPayload) {
+      base64String = fileOrPayload.base64;
+      mimeType = fileOrPayload.mimeType || mimeType;
+    } else if (fileOrPayload && typeof fileOrPayload.arrayBuffer === "function") {
+      // Backward compatibility if a File was passed directly
+      const arrayBuffer = await fileOrPayload.arrayBuffer();
+      base64String = Buffer.from(arrayBuffer).toString("base64");
+      mimeType = fileOrPayload.type || mimeType;
+    } else if (typeof fileOrPayload === "string") {
+      base64String = fileOrPayload;
+    } else {
+      throw new Error("Invalid input for scanReceipt");
+    }
 
     const prompt = `
       Analyze this receipt image and extract the following information in JSON format:
@@ -243,8 +260,8 @@ export async function scanReceipt(file) {
       - Date (in ISO format)
       - Description or items purchased (brief summary)
       - Merchant/store name
-      - Suggested category (one of: housing,transportation,groceries,utilities,entertainment,food,shopping,healthcare,education,personal,travel,insurance,gifts,bills,other-expense )
-      
+      - Suggested category (one of: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense)
+
       Only respond with valid JSON in this exact format:
       {
         "amount": number,
@@ -254,17 +271,17 @@ export async function scanReceipt(file) {
         "category": "string"
       }
 
-      If its not a recipt, return an empty object
+      If it's not a receipt, return an empty object {}.
     `;
 
     const result = await model.generateContent([
+      prompt,
       {
         inlineData: {
           data: base64String,
-          mimeType: file.type,
+          mimeType,
         },
       },
-      prompt,
     ]);
 
     const response = await result.response;
@@ -272,21 +289,24 @@ export async function scanReceipt(file) {
     const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
     try {
-      const data = JSON.parse(cleanedText);
+      const data = JSON.parse(cleanedText || "{}");
+      if (!data || Object.keys(data).length === 0) {
+        throw new Error("No receipt details detected. Try a clearer image.");
+      }
       return {
-        amount: parseFloat(data.amount),
-        date: new Date(data.date),
-        description: data.description,
-        category: data.category,
-        merchantName: data.merchantName,
+        amount: Number(data.amount) || 0,
+        date: data.date ? new Date(data.date) : new Date(),
+        description: data.description || "",
+        category: data.category || "other-expense",
+        merchantName: data.merchantName || "",
       };
     } catch (parseError) {
-      console.error("Error parsing JSON response:", parseError);
+      console.error("Error parsing JSON response:", parseError, cleanedText);
       throw new Error("Invalid response format from Gemini");
     }
   } catch (error) {
     console.error("Error scanning receipt:", error);
-    throw new Error("Failed to scan receipt");
+    throw new Error(error.message || "Failed to scan receipt");
   }
 }
 
