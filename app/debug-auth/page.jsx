@@ -88,8 +88,8 @@ export default function DebugAuth() {
           
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-6">
             <p><strong>Note:</strong> This page is for debugging authentication issues.</p>
-            <p>Use "Force Sign Out" if you're stuck in a logged-in state.</p>
-            <p>Use "Clear All Browser Data" if the issue persists.</p>
+            <p>Use &quot;Force Sign Out&quot; if you&apos;re stuck in a logged-in state.</p>
+            <p>Use &quot;Clear All Browser Data&quot; if the issue persists.</p>
           </div>
         </div>
       </div>
