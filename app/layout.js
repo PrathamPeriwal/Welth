@@ -25,7 +25,10 @@ export default function RootLayout({ children }) {
           colorPrimary: "#3b82f6",
         },
       }}
-      fallbackRedirectUrl="/dashboard"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+      signInForceRedirectUrl="/dashboard"
+      signUpForceRedirectUrl="/dashboard"
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
     >

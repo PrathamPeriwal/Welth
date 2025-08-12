@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { PenBox, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, SignOutButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
 import Image from "next/image";
 
@@ -58,13 +58,21 @@ const Header = async () => {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-10 h-10",
-                },
-              }}
-            />
+            <div className="flex items-center gap-3">
+              <SignOutButton>
+                <Button variant="outline" size="sm" className="text-xs">
+                  Sign Out
+                </Button>
+              </SignOutButton>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10",
+                  },
+                }}
+                showName={false}
+              />
+            </div>
           </SignedIn>
         </div>
       </nav>
