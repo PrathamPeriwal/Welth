@@ -35,7 +35,7 @@ const HeroSection = () => {
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black mb-4 md:mb-6 text-gray-900 dark:text-white leading-none tracking-tight">
                 <span className="relative">
                   <span className="gradient-text animate-gradient-shift bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">
-                    WELTH
+                    LEDGERLY
                   </span>
                   {/* Glowing effect behind text */}
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-600/20 blur-3xl scale-110 animate-pulse"></div>

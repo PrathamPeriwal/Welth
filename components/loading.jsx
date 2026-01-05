@@ -40,7 +40,7 @@ export const LoadingPage = () => {
           <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-          Loading Welth
+          Loading Ledgerly
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
           Preparing your financial dashboard...

@@ -20,7 +20,7 @@ const LandingPage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
-              Why Choose <span className="text-blue-600 dark:text-blue-400">Welth</span>?
+              Why Choose <span className="text-blue-600 dark:text-blue-400">Ledgerly</span>?
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Experience the perfect blend of simplicity and power in financial management
@@ -191,7 +191,7 @@ const LandingPage = () => {
               <span className="gradient-text"> Finances</span>?
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed animate-slide-up" style={{animationDelay: '0.2s'}}>
-              Join thousands who are already managing their money smarter with Welth
+              Join thousands who are already managing their money smarter with Ledgerly
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4 animate-scale-in" style={{animationDelay: '0.4s'}}>

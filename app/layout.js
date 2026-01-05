@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Welth",
+  title: "Ledgerly",
   description: "One stop Finance Platform",
 };
 
@@ -62,7 +62,7 @@ export default function RootLayout({ children }) {
               <div className="text-center animate-fade-in">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <span className="text-2xl">💰</span>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Welth</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Ledgerly</h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                   Smart Financial Management Made Simple
@@ -73,7 +73,7 @@ export default function RootLayout({ children }) {
                   <span>by Pratham Periwal</span>
                 </div>
                 <div className="mt-4 text-xs text-gray-400 dark:text-gray-500">
-                  © 2025 Welth. All rights reserved.
+                  © 2025 Ledgerly. All rights reserved.
                 </div>
               </div>
             </div>
