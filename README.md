@@ -4,7 +4,7 @@
 
 ## 📖 Overview
 
-Ledgerly is a modern, full-stack financial management application that leverages artificial intelligence to help users track spending, manage budgets, and gain actionable financial insights—all through an intuitive interface powered by receipt scanning and automated analysis.
+Ledgerly is a modern, AI-powered financial management application that helps users track income and expenses, manage budgets, and gain actionable insights through a clean and intuitive interface. It supports smart transaction categorization, recurring payments, and real-time financial analytics to provide clear visibility into spending patterns, while AI-driven receipt scanning automates data entry and reduces manual effort.
 
 ## ⭐ Key Features
 
