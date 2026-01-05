@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Performance optimizations
+  // Disable Turbopack due to font loading issues with Next.js 15
+  // Re-enable when Turbopack font support is stable
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@clerk/nextjs'],

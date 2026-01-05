@@ -19,10 +19,8 @@ export function ReceiptScanner({ onScanComplete }) {
 
   const fileToBase64 = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
-    const bytes = new Uint8Array(arrayBuffer);
-    let binary = "";
-    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-    return btoa(binary);
+    // More efficient and safer Base64 encoding using Buffer
+    return Buffer.from(arrayBuffer).toString("base64");
   };
 
   const handleReceiptScan = async (file) => {

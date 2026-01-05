@@ -39,23 +39,6 @@ export default function RootLayout({ children }) {
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-          <style dangerouslySetInnerHTML={{
-            __html: `
-              /* Critical CSS for LCP optimization */
-              .hero-text {
-                font-display: swap;
-                contain: layout style paint;
-              }
-              .animate-fade-in {
-                animation: fadeIn 0.6s ease-out;
-                will-change: opacity, transform;
-              }
-              @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-              }
-            `
-          }} />
         </head>
         <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}>
           <Header />

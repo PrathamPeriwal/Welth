@@ -7,7 +7,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+function getGemini() {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("Missing GEMINI_API_KEY");
+  }
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+}
 
 const serializeAmount = (obj) => ({
   ...obj,
@@ -231,10 +236,14 @@ export async function getUserTransactions(query = {}) {
 export async function scanReceipt(fileOrPayload) {
   try {
     if (!process.env.GEMINI_API_KEY) {
-      throw new Error("Missing GEMINI_API_KEY. Add it to your environment and restart the server.");
+      throw new Error(
+        "Missing GEMINI_API_KEY. Add it to your environment and restart the server."
+      );
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Using Gemini 2.5 Flash - stable v1 API (not v1beta)
+    const genAI = getGemini();
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Support both File objects and a base64 payload from the client
     let base64String = "";
@@ -262,7 +271,8 @@ export async function scanReceipt(fileOrPayload) {
       - Merchant/store name
       - Suggested category (one of: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense)
 
-      Only respond with valid JSON in this exact format:
+      IMPORTANT: Respond ONLY with valid JSON, no markdown, no extra text.
+      Format:
       {
         "amount": number,
         "date": "ISO date string",
@@ -286,7 +296,8 @@ export async function scanReceipt(fileOrPayload) {
 
     const response = await result.response;
     const text = response.text();
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
+    // Better JSON cleaning - remove markdown code blocks and extra whitespace
+    const cleanedText = text.replace(/```(?:json)?\n?/g, "").replace(/```\n?/g, "").trim();
 
     try {
       const data = JSON.parse(cleanedText || "{}");
@@ -301,7 +312,7 @@ export async function scanReceipt(fileOrPayload) {
         merchantName: data.merchantName || "",
       };
     } catch (parseError) {
-      console.error("Error parsing JSON response:", parseError, cleanedText);
+      console.error("Error parsing JSON response:", parseError, "Raw text:", cleanedText);
       throw new Error("Invalid response format from Gemini");
     }
   } catch (error) {
@@ -309,6 +320,8 @@ export async function scanReceipt(fileOrPayload) {
     throw new Error(error.message || "Failed to scan receipt");
   }
 }
+
+
 
 // Helper function to calculate next recurring date
 function calculateNextRecurringDate(startDate, interval) {
